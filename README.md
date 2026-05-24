@@ -307,6 +307,67 @@ flowchart LR
 
 The server is intentionally local-first. It runs over stdio, stores watchlist state in local SQLite, validates inputs and outputs with Zod schemas, and keeps carrier failures observable without leaking sensitive shipment data.
 
+### 🌊 Complete End-to-End Tracking Flow
+
+When an LLM requests tracking details for a shipment, the request goes through cache lookup, rate limiting, selective HTML scraping, and intelligence-layer reasoning before returning a final parsed verdict.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor LLM as LLM Client
+    participant Server as MCP Server
+    participant Cache as LRU Cache
+    participant Rate as Rate Limiter
+    participant AWB as AWB Detector
+    participant Adapt as Carrier Adapter
+    participant HTTP as HTTP Client
+    participant Intel as Intelligence Layer
+    participant Web as Carrier Public Portal
+
+    LLM->>Server: track_shipment({ awb, needed_by })
+    
+    Server->>Cache: Query AWB Cache (by AWB key)
+    
+    alt Cache Hit (within 90 seconds)
+        Cache-->>Server: Cached Raw Result
+        Note over Server: Skip network requests!
+    else Cache Miss
+        alt Carrier is not specified
+            Server->>AWB: detect_carrier(awb)
+            AWB-->>Server: Detected Carrier(s) + confidence
+        end
+        Server->>Rate: Request Rate Token
+        alt Rate Limit Exceeded
+            Rate-->>Server: Throw RateLimitError
+            Server-->>LLM: Return status: "unknown" (Rate limited)
+        else Rate Limit OK
+            Server->>Adapt: track(awb)
+            Adapt->>HTTP: Fetch Tracking Page
+            HTTP->>Web: HTTP GET/POST with realistic UA and jitter
+            Web-->>HTTP: HTML Tracking Response
+            HTTP-->>Adapt: HTML String
+            Adapt->>Adapt: Parse HTML via Cheerio
+            Adapt-->>Server: RawTrackingResult (parsed events & status)
+            Server->>Cache: Write result to Cache (90s TTL)
+        end
+    end
+    
+    Server->>Intel: deadline_reasoner.ts (RawTrackingResult + needed_by)
+    Intel->>Intel: Analyze latest scan events & status code
+    
+    alt needed_by is provided
+        Intel->>Intel: Run Route SLA / Heuristic check
+        Intel->>Intel: Compute p50 / p90 transit window
+        Intel->>Intel: Calculate buffer hours & final status verdict
+    else no needed_by
+        Intel->>Intel: Apply default fallback predictions
+    end
+    
+    Intel-->>Server: ShipmentStatus (with verdict, ETA basis, and 1-3 sentence reasoning)
+    Server-->>LLM: Return ShipmentStatus JSON-RPC Response
+```
+
+
 ## Design Principles
 
 - Prefer one reliable carrier path over many fragile integrations.
