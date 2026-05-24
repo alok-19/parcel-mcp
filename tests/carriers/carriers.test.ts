@@ -17,7 +17,7 @@ describe("carrier parsers", () => {
   });
 
   it("parses Blue Dart live accordion fixture", () => {
-    const result = parseBlueDartHtml(fixture("bluedart.live-shape.fixtures.html"), "21038951172");
+    const result = parseBlueDartHtml(fixture("bluedart.live-shape.fixtures.html"), "21098765432");
     expect(result.events).toHaveLength(4);
     expect(result.current_location).toBe("Muzaffarpur Hub");
     expect(result.raw_status).toContain("In Transit");

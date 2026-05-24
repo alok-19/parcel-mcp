@@ -86,11 +86,77 @@ npx -y indian-parcel-mcp
 
 ## Add To Your MCP Client
 
-Configure your preferred MCP client to use the published package via `npx` (recommended):
+Configure your preferred MCP client to use the published package via `npx` (recommended) or from your local build.
+
+### MCP Configuration File Paths
+
+Below are the default configuration file paths for popular MCP clients:
+
+| Client / Agent | Scope | Configuration File Path |
+|---|---|---|
+| **Claude Desktop** | Global (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| | Global (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Cursor** | Global | `~/.cursor/mcp.json` |
+| | Project | `.cursor/mcp.json` |
+| **Cline** | Global | `~/.cline/data/settings/cline_mcp_settings.json` |
+| | Project | `.cline/mcp.json` |
+| **Roo Code** | Global (macOS) | `~/Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/cline_mcp_settings.json` |
+| | Global (Windows) | `%APPDATA%\Code\User\globalStorage\rooveterinaryinc.roo-cline\settings\cline_mcp_settings.json` |
+| | Project | `.roo/mcp.json` |
+| **Windsurf** | Global (macOS) | `~/.codeium/windsurf/mcp_config.json` |
+| | Global (Windows) | `%APPDATA%\Codeium\Windsurf\mcp_config.json` |
+| **Antigravity CLI / Editor** | Global | `~/.antigravitycli/mcp.json` |
+
+---
 
 ### Claude Desktop
 
-Add this to `claude_desktop_config.json`:
+Add this to your Claude Desktop configuration file (located at the path above):
+
+```json
+{
+  "mcpServers": {
+    "indian-parcel": {
+      "command": "npx",
+      "args": ["-y", "indian-parcel-mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Add this to either your global or project-specific `mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "indian-parcel": {
+      "command": "npx",
+      "args": ["-y", "indian-parcel-mcp"]
+    }
+  }
+}
+```
+
+### Cline / Roo Code
+
+Add this to your global settings file or project settings file:
+
+```json
+{
+  "mcpServers": {
+    "indian-parcel": {
+      "command": "npx",
+      "args": ["-y", "indian-parcel-mcp"]
+    }
+  }
+}
+```
+
+### Windsurf
+
+Add this to your Windsurf configuration file:
 
 ```json
 {
@@ -138,6 +204,7 @@ Add this to your Antigravity MCP config:
 }
 ```
 
+
 ---
 
 ## Local Development (Optional)
@@ -168,11 +235,11 @@ A template local configuration is available in [examples/claude-desktop-config.j
 Once connected, ask your MCP client directly:
 
 ```text
-Track this India package with indian-parcel: 21038951172
+Track this India package with indian-parcel: 21098765432
 ```
 
 ```text
-Use track_shipment for AWB 18033769504. It must arrive before 2026-05-26T12:00:00+05:30.
+Use track_shipment for AWB 18098765432. It must arrive before 2026-05-26T12:00:00+05:30.
 ```
 
 ```text
