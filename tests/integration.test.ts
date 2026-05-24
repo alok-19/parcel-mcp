@@ -34,6 +34,7 @@ describe("trackShipmentTool integration", () => {
 
     expect(result.carrier).toBe("bluedart");
     expect(result.events.length).toBeGreaterThan(0);
+    expect(result.events[0]).not.toHaveProperty("rawTimestampText");
     expect(result.predicted_delivery?.basis).toBe("historical_data");
   });
 

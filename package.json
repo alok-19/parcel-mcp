@@ -1,5 +1,5 @@
 {
-  "name": "parcel-mcp",
+  "name": "indian-parcel-mcp",
   "version": "0.1.0",
   "description": "India-focused MCP server for shipment tracking, deadline-aware reasoning, and escalation guidance.",
   "license": "MIT",
@@ -7,7 +7,7 @@
   "main": "dist/src/server.js",
   "types": "dist/src/server.d.ts",
   "bin": {
-    "parcel-mcp": "dist/src/server.js"
+    "indian-parcel-mcp": "dist/src/server.js"
   },
   "files": [
     "dist",

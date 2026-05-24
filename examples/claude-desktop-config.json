@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "parcel": {
-      "command": "npx",
-      "args": ["parcel-mcp"]
+    "indian-parcel": {
+      "command": "node",
+      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
     }
   }
 }

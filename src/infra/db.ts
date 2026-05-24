@@ -2,9 +2,15 @@ import Database from "better-sqlite3";
 import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { NormalizedPhase, ShipmentStatus, Watch } from "../types.js";
 
-const DEFAULT_DB_PATH = resolve(process.cwd(), "parcel.sqlite");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const DEFAULT_DB_PATH = resolve(
+  __dirname,
+  __dirname.includes("dist") ? "../../.." : "../..",
+  "parcel.sqlite"
+);
 
 /**
  * SQLite-backed persistence for Phase 1 watchlist state.

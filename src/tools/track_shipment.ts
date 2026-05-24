@@ -6,7 +6,7 @@ import { awbRateLimiter } from "../infra/rate_limit.js";
 import { logger } from "../infra/logger.js";
 import { detectCarrierByAwb } from "../intelligence/awb_detector.js";
 import { reasonAboutShipment } from "../intelligence/deadline_reasoner.js";
-import type { CarrierSlug, ShipmentStatus } from "../types.js";
+import type { CarrierSlug, ScanEvent, ShipmentStatus } from "../types.js";
 
 /**
  * Executes the main tracking flow: detect carrier, fetch, normalize, and reason.
@@ -29,7 +29,7 @@ export async function trackShipmentTool(input: {
       ...(input.destination_pincode ? { destinationPin: input.destination_pincode } : {})
     });
     observabilityStore.recordCacheHit(cached.carrier);
-    return status;
+    return sanitizeShipmentStatus(status);
   }
 
   const adapter = input.carrier
@@ -67,7 +67,7 @@ export async function trackShipmentTool(input: {
       ...(input.destination_pincode ? { destinationPin: input.destination_pincode } : {})
     });
     observabilityStore.recordLiveSuccess(raw.carrier);
-    return status;
+    return sanitizeShipmentStatus(status);
   } catch (error) {
     logger.warn({ err: error, carrier: adapter.name }, "Tracking failed");
     if (
@@ -101,6 +101,25 @@ function unknownStatus(awb: string, carrier: string, reasoning: string): Shipmen
     events: [],
     reasoning,
     fetched_at: new Date().toISOString()
+  };
+}
+
+/**
+ * Removes parser-only event fields before crossing the MCP output-schema boundary.
+ */
+function sanitizeShipmentStatus(status: ShipmentStatus): ShipmentStatus {
+  return {
+    ...status,
+    events: status.events.map(stripInternalEventFields)
+  };
+}
+
+function stripInternalEventFields(event: ScanEvent): ScanEvent {
+  return {
+    timestamp: event.timestamp,
+    location: event.location,
+    status_code: event.status_code,
+    description: event.description
   };
 }
 

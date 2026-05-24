@@ -5,7 +5,7 @@ import pino from "pino";
  */
 export const logger = pino(
   {
-    name: "parcel-mcp",
+    name: "indian-parcel-mcp",
     level: process.env.LOG_LEVEL ?? "info",
     redact: {
       paths: ["awb", "*.awb", "args.awb"],

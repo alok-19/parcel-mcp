@@ -24,14 +24,29 @@ import { listWatchesTool, refreshWatchesTool, removeWatchTool, watchShipmentTool
 import { anomalySchema, escalationStepSchema, trackShipmentInputSchema } from "./types.js";
 
 const server = new McpServer({
-  name: "parcel-mcp",
+  name: "indian-parcel-mcp",
   version: "0.1.0"
 });
 
 server.registerTool(
   "track_shipment",
   {
-    description: "Track an Indian courier shipment and return deadline-aware reasoning.",
+    description:
+      "Track an Indian courier shipment by AWB or tracking number and return deadline-aware reasoning. Use this when a user asks to track a package in India, including bare numeric tracking numbers. Auto-detects Blue Dart, DTDC, Delhivery, and India Post when possible, so do not ask for the carrier first unless detection fails.",
+    inputSchema: trackShipmentInputSchema,
+    outputSchema: shipmentStatusSchema.shape
+  },
+  async (args) => {
+    const result = await trackShipmentTool(normalizeTrackArgs(args));
+    return toolResult(result);
+  }
+);
+
+server.registerTool(
+  "track_india_parcel",
+  {
+    description:
+      "Track an India parcel or shipment by AWB or tracking number. Prefer this for India package tracking requests with bare numeric tracking numbers. Auto-detects Blue Dart, DTDC, Delhivery, and India Post when possible.",
     inputSchema: trackShipmentInputSchema,
     outputSchema: shipmentStatusSchema.shape
   },
@@ -44,7 +59,31 @@ server.registerTool(
 server.registerTool(
   "detect_carrier",
   {
-    description: "Detect the most likely Indian carrier for an AWB.",
+    description:
+      "Detect the most likely Indian carrier for an AWB or tracking number. Use this for India shipment numbers when the carrier is unknown instead of guessing from non-India couriers.",
+    inputSchema: detectCarrierInputSchema,
+    outputSchema: {
+      carrier: z.string(),
+      confidence: z.number(),
+      alternatives: z.array(
+        z.object({
+          carrier: z.string(),
+          confidence: z.number()
+        })
+      )
+    }
+  },
+  async (args) => {
+    const result = await detectCarrierTool(args);
+    return toolResult(result);
+  }
+);
+
+server.registerTool(
+  "detect_india_carrier",
+  {
+    description:
+      "Detect the likely Indian courier for an AWB or tracking number. Prefer this for India parcel requests when the carrier is not given.",
     inputSchema: detectCarrierInputSchema,
     outputSchema: {
       carrier: z.string(),
@@ -66,7 +105,7 @@ server.registerTool(
 server.registerTool(
   "estimate_eta",
   {
-    description: "Estimate delivery windows between two India PIN codes.",
+    description: "Estimate delivery windows between two India PIN codes for supported Indian carriers.",
     inputSchema: estimateEtaInputSchema,
     outputSchema: {
       p50_hours: z.number(),
@@ -83,7 +122,8 @@ server.registerTool(
 server.registerTool(
   "diagnose_shipment",
   {
-    description: "Track a shipment, detect anomalies, and produce escalation guidance.",
+    description:
+      "Track an Indian shipment, detect anomalies, and produce escalation guidance. Use this after tracking when the shipment looks delayed, stuck, or exception-prone.",
     inputSchema: diagnoseShipmentInputSchema,
     outputSchema: {
       status: shipmentStatusSchema,
@@ -101,7 +141,7 @@ server.registerTool(
 server.registerTool(
   "watch_shipment",
   {
-    description: "Persist a shipment watch in local SQLite storage.",
+    description: "Persist an Indian shipment watch in local SQLite storage for later refresh checks.",
     inputSchema: watchShipmentInputSchema,
     outputSchema: {
       watch_id: z.string().uuid()
@@ -116,7 +156,7 @@ server.registerTool(
 server.registerTool(
   "list_watches",
   {
-    description: "List all locally persisted watched shipments.",
+    description: "List all locally persisted watched Indian shipments.",
     outputSchema: {
       watches: z.array(watchSchema)
     }
@@ -130,7 +170,7 @@ server.registerTool(
 server.registerTool(
   "refresh_watches",
   {
-    description: "Refresh one watched shipment or all watches and persist monitoring state.",
+    description: "Refresh one watched Indian shipment or all watches and persist monitoring state.",
     inputSchema: refreshWatchesInputSchema,
     outputSchema: {
       refreshed_at: z.string(),
@@ -148,7 +188,7 @@ server.registerTool(
 server.registerTool(
   "remove_watch",
   {
-    description: "Remove a watched shipment from local SQLite storage.",
+    description: "Remove a watched Indian shipment from local SQLite storage.",
     inputSchema: removeWatchInputSchema,
     outputSchema: {
       removed: z.boolean()
@@ -239,7 +279,7 @@ function normalizeWatchArgs(args: z.output<z.ZodObject<typeof watchShipmentInput
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  logger.info("parcel-mcp server started on stdio");
+  logger.info("indian-parcel-mcp server started on stdio");
 }
 
 main().catch((error) => {

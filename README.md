@@ -1,114 +1,207 @@
-# parcel-mcp
+<h1 align="center">indian-parcel-mcp</h1>
 
-`parcel-mcp` is an India-first Model Context Protocol server for shipment tracking, deadline-aware ETA reasoning, anomaly detection, and escalation guidance. It is built for LLM clients that need judgment, not just raw courier scan events.
+<p align="center">
+  <strong>Deadline-aware shipment intelligence for Indian couriers, exposed as an MCP server.</strong>
+</p>
 
-## Why this exists
+<p align="center">
+  Track an AWB, understand the delivery risk, estimate the buffer against a hard deadline, and get escalation guidance your AI client can explain in plain language.
+</p>
 
-> I was tracking my partner's visa documents from Muzaffarpur to Bangalore against a tight embassy deadline. Blue Dart's app is clunky, AfterShip doesn't understand Indian carriers deeply, and TrackMage gives you JSON but no judgment about whether your shipment will actually arrive in time.
+<p align="center">
+  <b>India-first</b> · <b>MCP-native</b> · <b>Deadline-aware</b> · <b>Local-first</b>
+</p>
 
-This project turns public Indian courier tracking pages into an MCP-native intelligence layer. Instead of only exposing scans, it returns a verdict such as `on_track`, `at_risk`, or `delayed`, a conservative delivery window, and reasoning that an LLM can paraphrase directly for a user.
+<div align="center">
 
-## Phase 1 Support
+[![Version](https://img.shields.io/badge/version-0.1.0-CB3837?style=flat-square)](package.json)
+[![CI](https://img.shields.io/github/actions/workflow/status/alok-19/parcel-mcp/ci.yml?style=flat-square&label=CI&color=2EA043)](https://github.com/alok-19/parcel-mcp/actions/workflows/ci.yml)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square)](https://nodejs.org/)
+[![MCP](https://img.shields.io/badge/MCP-server-5B5BD6?style=flat-square)](https://modelcontextprotocol.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-111827?style=flat-square)](LICENSE)
 
-| Carrier | AWB format | Live support | Fixture-backed parser tests |
-|---|---|---:|---:|
-| Blue Dart | 8-11 digits | Yes, best-effort | Yes |
-| DTDC | 1-2 letters + 7-9 digits | Best-effort only | Yes |
-| Delhivery | 14 digits | Best-effort only | Yes |
-| India Post / Speed Post | `XX#########IN` | Best-effort only | Yes |
+</div>
 
-Phase 1 intentionally ships with one real live vertical slice and conservative fallback behavior for the other carriers when their public portals are blocked or unstable.
+<br />
 
-## Install
+## Why This Exists
+
+Most tracking tools answer one narrow question: "what did the carrier last say?" For high-stakes shipments, that is not enough.
+
+`indian-parcel-mcp` turns Indian courier tracking into structured judgment for LLM clients. It does not just expose scan events; it returns a verdict such as `on_track`, `at_risk`, `delayed`, `stuck`, `exception`, or `unknown`, with a conservative delivery window, deadline buffer, anomaly signals, and escalation next steps.
+
+The project was born from a real deadline-sensitive shipment: visa documents moving from Muzaffarpur to Bangalore with an embassy clock running. Generic trackers could show JSON. They could not say whether the parcel was likely to arrive in time, or what to do next.
+
+## What It Does
+
+| Capability | What your MCP client gets |
+|---|---|
+| Carrier detection | AWB-pattern detection for Blue Dart, DTDC, Delhivery, and India Post / Speed Post. |
+| Live tracking | Best-effort public portal tracking through carrier adapters, with safe `unknown` fallback when blocked or unstable. |
+| Normalization | Carrier-specific scan text mapped into consistent shipment phases and status verdicts. |
+| Deadline reasoning | `needed_by` support with predicted delivery windows, confidence, and `buffer_hours`. |
+| Anomaly detection | Signals for stale scans, low scan density, RTO, exception flags, and stuck out-for-delivery cases. |
+| Escalation guidance | Carrier-aware playbooks with privacy-safe scripts and contact paths. |
+| Local watchlist | SQLite-backed watch storage with explicit refresh, change detection, and persisted monitoring state. |
+| Observability | Lightweight health snapshot for carrier failures, cache hits, parser drift, and watch refresh runs. |
+
+## Supported Carriers
+
+| Carrier | AWB shape | Phase 1 behavior | Parser tests |
+|---|---|---|---:|
+| Blue Dart | `8-11` digits | Live best-effort tracking | Yes |
+| DTDC | `1-2` letters + `7-9` digits | Best-effort adapter with conservative fallback | Yes |
+| Delhivery | `14` digits | Best-effort adapter with conservative fallback | Yes |
+| India Post / Speed Post | `XX#########IN` | Best-effort adapter with conservative fallback | Yes |
+
+Carrier portals change often and may block automated access. This server treats uncertainty as a first-class result: when it cannot fetch or parse confidently, it returns a structured `unknown` response instead of inventing confidence.
+
+## Quickstart
+
+Clone and build the server:
 
 ```bash
 npm install
 npm run build
 ```
 
-For local MCP usage without publishing:
+Run the MCP server over stdio:
 
 ```bash
-npx tsx src/server.ts
+node dist/src/server.js
 ```
 
-After publishing, the intended install path is:
+During development, run it directly with `tsx`:
 
 ```bash
-npx parcel-mcp
+npm run dev
 ```
 
-### Configuration in MCP Clients
+After the package is published, the intended install path is:
 
-Below are the setup snippets to integrate `parcel-mcp` with various popular AI development tools:
+```bash
+npx -y indian-parcel-mcp
+```
 
-#### Claude Desktop
+## Add To Your MCP Client
 
-Add this to your `claude_desktop_config.json`:
+### Claude Desktop
+
+Add this to `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "parcel": {
-      "command": "npx",
-      "args": ["-y", "parcel-mcp"]
+    "indian-parcel": {
+      "command": "node",
+      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
     }
   }
 }
 ```
 
-A ready-to-paste version also lives in [examples/claude-desktop-config.json](examples/claude-desktop-config.json).
+After publishing, switch the command to `npx`:
 
-#### OpenCode
+```json
+{
+  "mcpServers": {
+    "indian-parcel": {
+      "command": "npx",
+      "args": ["-y", "indian-parcel-mcp"]
+    }
+  }
+}
+```
 
-For OpenCode, you can add it to your global configuration file (typically `~/.config/opencode/opencode.jsonc`) or a project-specific `opencode.json` file:
+A ready-to-paste local config lives in [examples/claude-desktop-config.json](examples/claude-desktop-config.json).
+
+### Codex
+
+```bash
+codex mcp add indian-parcel -- node /Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js
+```
+
+After publishing:
+
+```bash
+codex mcp add indian-parcel -- npx -y indian-parcel-mcp
+```
+
+Manual TOML config:
+
+```toml
+[mcp_servers.indian-parcel]
+command = "node"
+args = ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
+```
+
+### OpenCode
 
 ```json
 {
   "mcp": {
-    "parcel": {
+    "indian-parcel": {
       "type": "local",
-      "command": ["npx", "-y", "parcel-mcp"],
+      "command": ["node", "/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"],
       "enabled": true
     }
   }
 }
 ```
 
-#### Codex
+### Antigravity CLI / Editor
 
-For Codex, you can configure it via the CLI:
-
-```bash
-codex mcp add parcel -- npx -y parcel-mcp
-```
-
-Or manually add it to your configuration file (`~/.codex/config.toml` or project-specific `.codex/config.toml`):
-
-```toml
-[mcp_servers.parcel]
-command = "npx"
-args = ["-y", "parcel-mcp"]
-```
-
-#### Antigravity CLI / Editor
-
-For Antigravity CLI or the Antigravity editor integration, add it to your `mcp_config.json` (typically at `~/.gemini/antigravity/mcp_config.json` or `~/.gemini/antigravity-cli/mcp_config.json`):
+Add this to your Antigravity MCP config:
 
 ```json
 {
   "mcpServers": {
-    "parcel": {
-      "command": "npx",
-      "args": ["-y", "parcel-mcp"]
+    "indian-parcel": {
+      "command": "node",
+      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
     }
   }
 }
 ```
 
+## Ask It Like This
+
+Once connected, ask your MCP client directly:
+
+```text
+Track this India package with indian-parcel: 21038951172
+```
+
+```text
+Use track_shipment for AWB 18033769504. It must arrive before 2026-05-26T12:00:00+05:30.
+```
+
+```text
+Diagnose this shipment and tell me whether I should escalate today: EA123456789IN
+```
+
+The server descriptions intentionally guide clients toward Indian couriers for bare numeric AWBs, instead of drifting to unrelated non-India carriers.
+
 ## Tool Reference
 
-### `track_shipment`
+| Tool | Purpose |
+|---|---|
+| `track_shipment` | Track an Indian shipment, normalize carrier events, and return deadline-aware reasoning. |
+| `track_india_parcel` | Alias optimized for clients that respond better to explicit India package wording. |
+| `detect_carrier` | Infer the likely Indian carrier from an AWB. |
+| `detect_india_carrier` | India-specific carrier-detection alias. |
+| `estimate_eta` | Estimate route-level delivery windows from carrier and PIN codes. |
+| `diagnose_shipment` | Track, detect anomalies, and generate escalation guidance. |
+| `watch_shipment` | Persist a shipment in the local SQLite watchlist. |
+| `list_watches` | List watched shipments and their last known monitoring state. |
+| `refresh_watches` | Refresh one watch or all watches, detect changes, and persist results. |
+| `remove_watch` | Remove a watch from local storage. |
+| `get_observability` | Inspect carrier health, parser drift, and watch refresh counters. |
+
+## Example Outputs
+
+### Track A Deadline-Sensitive Shipment
 
 Input:
 
@@ -129,195 +222,121 @@ Output shape:
   "carrier": "bluedart",
   "status": "at_risk",
   "normalized_phase": "in_transit",
+  "current_location": "Delhi Hub",
+  "last_scan_at": "2026-05-24T08:10:00.000+05:30",
   "predicted_delivery": {
-    "p50": "2026-05-25T...",
-    "p90": "2026-05-26T...",
+    "p50": "2026-05-25T20:10:00.000+05:30",
+    "p90": "2026-05-26T08:10:00.000+05:30",
     "confidence": 0.82,
     "basis": "historical_data"
   },
-  "buffer_hours": 6,
+  "needed_by": "2026-05-26T12:00:00+05:30",
+  "buffer_hours": 3.8,
   "events": [],
-  "reasoning": "Currently at Delhi hub with a tight delivery buffer against your deadline.",
-  "fetched_at": "2026-05-24T..."
+  "reasoning": "Currently at Delhi Hub with latest scan ... The delivery buffer versus the deadline is about 4 hours.",
+  "fetched_at": "2026-05-24T09:00:00.000+05:30"
 }
 ```
 
-### `detect_carrier`
-
-Input:
-
-```json
-{ "awb": "EA123456789IN" }
-```
-
-Output:
+### Diagnose A Shipment
 
 ```json
 {
-  "carrier": "india_post",
-  "confidence": 0.99,
-  "alternatives": []
+  "awb": "1234567890",
+  "needed_by": "2026-05-26T12:00:00+05:30",
+  "purpose": "visa documents"
 }
 ```
-
-### `estimate_eta`
-
-Input:
-
-```json
-{
-  "carrier": "bluedart",
-  "origin_pincode": "110001",
-  "destination_pincode": "560001",
-  "service_type": "critical_express"
-}
-```
-
-Output:
-
-```json
-{
-  "p50_hours": 24,
-  "p90_hours": 36,
-  "basis": "historical_data"
-}
-```
-
-### `diagnose_shipment`
 
 Returns:
 
 ```json
 {
   "status": {},
-  "anomalies": [],
-  "escalation_playbook": [],
-  "reasoning": "Detected stale_scan and generated a Blue Dart escalation sequence."
+  "anomalies": [
+    {
+      "type": "stale_scan",
+      "severity": "warning",
+      "description": "Latest scan is older than the configured threshold.",
+      "detected_at": "2026-05-24T09:00:00.000Z"
+    }
+  ],
+  "escalation_playbook": [
+    {
+      "step": 1,
+      "action": "Contact carrier support with AWB and latest scan details.",
+      "channel": "phone",
+      "expected_outcome": "Confirm whether the shipment is moving and request a delivery commitment."
+    }
+  ],
+  "reasoning": "Detected 1 anomaly signal(s): stale_scan. Currently at ..."
 }
 ```
 
-### `watch_shipment`
-
-Input:
+### Watch And Refresh
 
 ```json
 {
   "awb": "1234567890",
   "needed_by": "2026-05-26T12:00:00+05:30",
-  "label": "Ankita visa docs"
+  "label": "Visa documents"
 }
 ```
 
-Output:
+Then refresh later:
 
 ```json
-{ "watch_id": "uuid" }
+{}
 ```
 
-### `list_watches`
+`refresh_watches` returns each checked watch, whether the state changed, the latest status, anomaly signals, and any refresh error.
 
-Output:
+## Architecture
 
-```json
-{
-  "watches": [
-    {
-      "watch_id": "uuid",
-      "awb": "1234567890",
-      "carrier": "bluedart",
-      "label": "Ankita visa docs",
-      "added_at": "2026-05-24T..."
-    }
-  ]
-}
+```mermaid
+flowchart LR
+  Client["MCP client"] --> Server["indian-parcel-mcp"]
+  Server --> Detect["AWB detection"]
+  Detect --> Adapters["Carrier adapters"]
+  Adapters --> Normalize["Normalized scans"]
+  Normalize --> Reason["Deadline reasoner"]
+  Reason --> Diagnose["Anomaly + escalation"]
+  Server --> Watch["SQLite watchlist"]
+  Server --> Health["Observability snapshot"]
 ```
 
-### `remove_watch`
+The server is intentionally local-first. It runs over stdio, stores watchlist state in local SQLite, validates inputs and outputs with Zod schemas, and keeps carrier failures observable without leaking sensitive shipment data.
 
-Input:
+## Design Principles
 
-```json
-{ "watch_id": "uuid" }
-```
-
-Output:
-
-```json
-{ "removed": true }
-```
-
-### `refresh_watches`
-
-Input:
-
-```json
-{ "watch_id": "uuid" }
-```
-
-Output:
-
-```json
-{
-  "refreshed_at": "2026-05-24T...",
-  "watches": [
-    {
-      "watch_id": "uuid",
-      "awb": "1234567890",
-      "carrier": "bluedart",
-      "checked_at": "2026-05-24T...",
-      "changed": true,
-      "status": {},
-      "anomalies": []
-    }
-  ]
-}
-```
-
-### `get_observability`
-
-Returns:
-
-```json
-{
-  "carriers": [],
-  "recent_parser_drift": [],
-  "watch_refresh": {}
-}
-```
-
-## Reasoning Model
-
-`track_shipment` applies these rules in order:
-
-1. `delivered` if the latest visible event is a delivery event.
-2. `exception` if any event shows RTO, refusal, undelivered, or exception signals.
-3. `delayed` if a `needed_by` deadline exists and the p90 estimate misses it.
-4. `at_risk` if p90 lands within 12 hours of the deadline.
-5. `stuck` if the shipment has not moved for 36 hours.
-6. `on_track` otherwise.
-
-ETA estimates come from seeded PIN-to-PIN SLA data first, then state-pair heuristics, then carrier defaults. The basis is always returned so the caller can decide how much to trust it.
-
-## Pragmatic Phase 1 Adjustments
-
-- Blue Dart is the only carrier expected to work live end to end in Phase 1, and it now uses layered public-result fetch attempts plus parser-drift reporting before falling back to `unknown`. The remaining adapters are implemented and parser-tested, but their live portals are treated as best-effort because they are unstable or more likely to block scraping.
-- `list_watches` returns `{ "watches": [...] }` instead of a top-level JSON array in structured output. This keeps the response compatible with the current MCP SDK output-schema object model while preserving the full watch payload.
-- Watch monitoring remains explicit rather than hidden: `refresh_watches` updates persisted watch state, change detection, anomalies, and failure counters only when the client asks for a refresh.
-- Verdict accuracy is now covered by a small evaluation set in [data/verdict_eval_cases.json](data/verdict_eval_cases.json), alongside fixture-backed parser tests.
-- The README includes a static SVG screenshot rather than an animated GIF so the repository stays lightweight and reproducible.
+- Prefer one reliable carrier path over many fragile integrations.
+- Return structured uncertainty instead of pretending blocked carrier portals worked.
+- Keep responses LLM-friendly: compact JSON plus reasoning that can be paraphrased directly.
+- Treat ETA confidence as operational guidance, not a statistical guarantee.
+- Redact sensitive shipment data from logs and public escalation text.
+- Protect parsers with carrier fixtures and protocol-level tests.
 
 ## Development
 
 ```bash
+npm install
 npm run lint
 npm run test
 npm run build
+```
+
+Useful commands:
+
+```bash
+npm run typecheck
 npm run pack:check
 ```
 
-The local SQLite watchlist defaults to `parcel.sqlite` in the project root. Override it with `PARCEL_MCP_DB_PATH`.
+The local SQLite watchlist defaults to `parcel.sqlite` in the project root. Override it with `PARCEL_MCP_DB_PATH`; `BHARAT_LOGISTICS_DB_PATH` is also supported for backward compatibility. Set `LOG_LEVEL` to tune structured logging.
 
-## Contributing New Carriers
+The test suite covers carrier parsers, AWB detection, SLA lookup, deadline verdicts, anomaly detection, escalation logic, observability, watchlist monitoring, and MCP protocol schemas.
+
+## Contributing Carriers
 
 1. Add an AWB regex entry in [data/awb_patterns.json](data/awb_patterns.json).
 2. Implement a `CarrierAdapter` in `src/carriers/`.
@@ -325,6 +344,18 @@ The local SQLite watchlist defaults to `parcel.sqlite` in the project root. Over
 4. Add fixture HTML and parser tests under [tests/carriers](tests/carriers).
 5. Document whether live support is full or best-effort.
 
-## Example Scenarios
+## Roadmap
 
-See [examples/usage-recipes.md](examples/usage-recipes.md) for real workflows including visa documents, wedding cards, business contracts, and local watchlist operations.
+| Stage | Focus |
+|---|---|
+| Phase 1 | Reliable India-focused MCP core, Blue Dart vertical slice, parser fixtures, watchlist, explicit refresh, and observability. |
+| Phase 2 | Broader live carrier coverage where feasible, notification hooks, expanded SLA data, and HTTP transport for remote MCP clients. |
+| Phase 3 | SMS and email ingestion, community-reviewed SLA contributions, richer parser-drift triage, dashboarding, and MCP registry submission. |
+
+## Package Name
+
+The npm package for this project is `indian-parcel-mcp`.
+
+## License
+
+MIT [LICENSE](LICENSE).
