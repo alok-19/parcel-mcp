@@ -1,0 +1,63 @@
+{
+  "name": "parcel-mcp",
+  "version": "0.1.0",
+  "description": "India-focused MCP server for shipment tracking, deadline-aware reasoning, and escalation guidance.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/src/server.js",
+  "types": "dist/src/server.d.ts",
+  "bin": {
+    "parcel-mcp": "dist/src/server.js"
+  },
+  "files": [
+    "dist",
+    "data",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "clean": "rm -rf dist coverage",
+    "dev": "tsx src/server.ts",
+    "lint": "eslint .",
+    "test": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pack:check": "npm_config_cache=./.npm-cache npm pack --dry-run"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "logistics",
+    "tracking",
+    "india",
+    "courier",
+    "shipment"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
+    "better-sqlite3": "^12.4.1",
+    "cheerio": "^1.1.0",
+    "lru-cache": "^11.2.2",
+    "luxon": "^3.7.1",
+    "pino": "^10.1.0",
+    "robots-parser": "^3.0.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "@vitest/coverage-v8": "^4.0.8",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3",
+    "tsx": "^4.20.6",
+    "vitest": "^4.0.8"
+  }
+}

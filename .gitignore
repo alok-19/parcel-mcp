@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+coverage/
+
+# Local caches and logs
+.npm-cache/
+.eslintcache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+.antigravitycli/
+
+# Local drafts and generated planning notes
+README 2.md
+architecture_flow.md
+parcel-mcp-prompt.md
+
+# Runtime SQLite databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

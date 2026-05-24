@@ -1,0 +1,38 @@
+{
+  "bluedart": {
+    "display_name": "Blue Dart",
+    "patterns": [
+      {
+        "regex": "^\\d{8,11}$",
+        "confidence": 0.82
+      }
+    ]
+  },
+  "dtdc": {
+    "display_name": "DTDC",
+    "patterns": [
+      {
+        "regex": "^[A-Z]{1,2}\\d{7,9}$",
+        "confidence": 0.98
+      }
+    ]
+  },
+  "delhivery": {
+    "display_name": "Delhivery",
+    "patterns": [
+      {
+        "regex": "^\\d{14}$",
+        "confidence": 0.99
+      }
+    ]
+  },
+  "india_post": {
+    "display_name": "India Post",
+    "patterns": [
+      {
+        "regex": "^[A-Z]{2}\\d{9}IN$",
+        "confidence": 0.99
+      }
+    ]
+  }
+}

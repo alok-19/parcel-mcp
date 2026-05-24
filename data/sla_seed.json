@@ -1,0 +1,182 @@
+{
+  "routes": [
+    {
+      "origin_pin": "110001",
+      "destination_pin": "560001",
+      "origin_city": "New Delhi",
+      "destination_city": "Bengaluru",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 24, "p90_hours": 36 },
+          "surface": { "p50_hours": 72, "p90_hours": 96 }
+        },
+        "delhivery": {
+          "express": { "p50_hours": 36, "p90_hours": 54 },
+          "surface": { "p50_hours": 84, "p90_hours": 120 }
+        },
+        "india_post": {
+          "speedpost": { "p50_hours": 48, "p90_hours": 72 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "400001",
+      "destination_pin": "560001",
+      "origin_city": "Mumbai",
+      "destination_city": "Bengaluru",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 18, "p90_hours": 30 },
+          "surface": { "p50_hours": 60, "p90_hours": 84 }
+        },
+        "dtdc": {
+          "premium": { "p50_hours": 30, "p90_hours": 48 },
+          "surface": { "p50_hours": 72, "p90_hours": 96 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "700001",
+      "destination_pin": "560001",
+      "origin_city": "Kolkata",
+      "destination_city": "Bengaluru",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 32, "p90_hours": 48 },
+          "surface": { "p50_hours": 84, "p90_hours": 120 }
+        },
+        "india_post": {
+          "speedpost": { "p50_hours": 60, "p90_hours": 96 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "600001",
+      "destination_pin": "400001",
+      "origin_city": "Chennai",
+      "destination_city": "Mumbai",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 24, "p90_hours": 36 },
+          "surface": { "p50_hours": 72, "p90_hours": 96 }
+        },
+        "dtdc": {
+          "premium": { "p50_hours": 32, "p90_hours": 48 },
+          "surface": { "p50_hours": 78, "p90_hours": 108 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "842001",
+      "destination_pin": "560001",
+      "origin_city": "Muzaffarpur",
+      "destination_city": "Bengaluru",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 60, "p90_hours": 84 },
+          "surface": { "p50_hours": 120, "p90_hours": 168 }
+        },
+        "india_post": {
+          "speedpost": { "p50_hours": 96, "p90_hours": 144 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "500001",
+      "destination_pin": "110001",
+      "origin_city": "Hyderabad",
+      "destination_city": "New Delhi",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 20, "p90_hours": 30 },
+          "surface": { "p50_hours": 66, "p90_hours": 90 }
+        },
+        "delhivery": {
+          "express": { "p50_hours": 34, "p90_hours": 50 },
+          "surface": { "p50_hours": 84, "p90_hours": 120 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "380001",
+      "destination_pin": "400001",
+      "origin_city": "Ahmedabad",
+      "destination_city": "Mumbai",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 16, "p90_hours": 24 },
+          "surface": { "p50_hours": 42, "p90_hours": 60 }
+        },
+        "dtdc": {
+          "premium": { "p50_hours": 24, "p90_hours": 36 },
+          "surface": { "p50_hours": 54, "p90_hours": 72 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "302001",
+      "destination_pin": "110001",
+      "origin_city": "Jaipur",
+      "destination_city": "New Delhi",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 14, "p90_hours": 24 },
+          "surface": { "p50_hours": 36, "p90_hours": 54 }
+        },
+        "india_post": {
+          "speedpost": { "p50_hours": 28, "p90_hours": 42 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "682001",
+      "destination_pin": "560001",
+      "origin_city": "Kochi",
+      "destination_city": "Bengaluru",
+      "carriers": {
+        "bluedart": {
+          "critical_express": { "p50_hours": 22, "p90_hours": 34 },
+          "surface": { "p50_hours": 60, "p90_hours": 84 }
+        },
+        "delhivery": {
+          "express": { "p50_hours": 36, "p90_hours": 52 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    },
+    {
+      "origin_pin": "226001",
+      "destination_pin": "700001",
+      "origin_city": "Lucknow",
+      "destination_city": "Kolkata",
+      "carriers": {
+        "dtdc": {
+          "premium": { "p50_hours": 34, "p90_hours": 50 },
+          "surface": { "p50_hours": 78, "p90_hours": 108 }
+        },
+        "india_post": {
+          "speedpost": { "p50_hours": 48, "p90_hours": 72 }
+        }
+      },
+      "sample_size": 0,
+      "source": "heuristic_seed"
+    }
+  ]
+}

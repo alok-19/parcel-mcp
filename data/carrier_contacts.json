@@ -1,0 +1,111 @@
+{
+  "bluedart": {
+    "customer_care_phone": "1860-233-1234",
+    "email": "customerservice@bluedart.com",
+    "grievance_url": "https://www.bluedart.com/contactus",
+    "twitter": "@BlueDart_",
+    "playbook_template": [
+      {
+        "step": 1,
+        "action": "Call Blue Dart customer service",
+        "channel": "phone",
+        "contact": "1860-233-1234",
+        "script": "Quote AWB {awb}. Last scan was {last_location} at {last_scan_time}. Need confirmation of the next transit movement before {needed_by}.",
+        "expected_outcome": "A service representative checks the current hub and next leg assignment.",
+        "wait_before_next_step_hours": 6
+      },
+      {
+        "step": 2,
+        "action": "Email Blue Dart support",
+        "channel": "email",
+        "contact": "customerservice@bluedart.com",
+        "script": "Subject: Urgent tracking help for AWB {awb}. Shipment last moved at {last_location} on {last_scan_time}. This shipment is needed by {needed_by} for {purpose}. Please confirm the next movement and recovery plan.",
+        "expected_outcome": "Written escalation with an auditable case trail.",
+        "wait_before_next_step_hours": 8
+      },
+      {
+        "step": 3,
+        "action": "Use Blue Dart grievance form",
+        "channel": "web_form",
+        "contact": "https://www.bluedart.com/contactus",
+        "script": "Submit a concise issue summary with masked reference {social_safe_awb}, last scan {last_location} at {last_scan_time}, and requested delivery deadline {needed_by}.",
+        "expected_outcome": "Escalation reaches the digital support queue."
+      }
+    ]
+  },
+  "dtdc": {
+    "customer_care_phone": "+91-9606-911-811",
+    "email": "customersupport@dtdc.com",
+    "grievance_url": "https://www.dtdc.in/contact.asp",
+    "twitter": "@DTDCIndia",
+    "playbook_template": [
+      {
+        "step": 1,
+        "action": "Call DTDC support",
+        "channel": "phone",
+        "contact": "+91-9606-911-811",
+        "script": "Share AWB {awb}. Ask for branch-level confirmation because the last visible event is {last_location} at {last_scan_time}.",
+        "expected_outcome": "The support team validates branch ownership and next movement.",
+        "wait_before_next_step_hours": 6
+      },
+      {
+        "step": 2,
+        "action": "Email DTDC customer support",
+        "channel": "email",
+        "contact": "customersupport@dtdc.com",
+        "script": "Subject: Shipment escalation for AWB {awb}. Last update is {last_location} at {last_scan_time}. The shipment is needed by {needed_by} for {purpose}. Please help with recovery.",
+        "expected_outcome": "A ticket is created and routed to operations."
+      }
+    ]
+  },
+  "delhivery": {
+    "customer_care_phone": "+91-8069856101",
+    "email": "customersupport@delhivery.com",
+    "grievance_url": "https://www.delhivery.com/support",
+    "twitter": "@Delhivery",
+    "playbook_template": [
+      {
+        "step": 1,
+        "action": "Call Delhivery support",
+        "channel": "phone",
+        "contact": "+91-8069856101",
+        "script": "Provide AWB {awb} and request a manual lane check because the latest scan is {last_location} at {last_scan_time}.",
+        "expected_outcome": "Support confirms whether the shipment is awaiting line-haul, delivery slotting, or exception handling.",
+        "wait_before_next_step_hours": 4
+      },
+      {
+        "step": 2,
+        "action": "Raise a support query",
+        "channel": "web_form",
+        "contact": "https://www.delhivery.com/support",
+        "script": "Use masked reference {social_safe_awb} in public text. Mention last scan {last_location} at {last_scan_time}, deadline {needed_by}, and purpose {purpose}.",
+        "expected_outcome": "A trackable Delhivery support query is logged."
+      }
+    ]
+  },
+  "india_post": {
+    "customer_care_phone": "1800-266-6868",
+    "email": "bd.cplt@indiapost.gov.in",
+    "grievance_url": "https://www.indiapost.gov.in/grievance-redressal/file-a-complaint",
+    "twitter": "@IndiaPostOffice",
+    "playbook_template": [
+      {
+        "step": 1,
+        "action": "Call India Post customer care",
+        "channel": "phone",
+        "contact": "1800-266-6868",
+        "script": "Quote article number {awb}. Last scan shown is {last_location} at {last_scan_time}. Ask which Speed Post office currently owns the article.",
+        "expected_outcome": "The agent confirms the controlling office or complaint route.",
+        "wait_before_next_step_hours": 8
+      },
+      {
+        "step": 2,
+        "action": "File an India Post complaint",
+        "channel": "web_form",
+        "contact": "https://www.indiapost.gov.in/grievance-redressal/file-a-complaint",
+        "script": "Submit masked reference {social_safe_awb}, last known event {last_location} at {last_scan_time}, and requested deadline {needed_by}.",
+        "expected_outcome": "A formal complaint number is created for follow-up."
+      }
+    ]
+  }
+}

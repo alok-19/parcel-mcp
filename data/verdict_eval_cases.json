@@ -1,0 +1,90 @@
+[
+  {
+    "name": "delivered_terminal_event",
+    "raw": {
+      "awb": "1234567890",
+      "carrier": "bluedart",
+      "raw_status": "Shipment Delivered",
+      "current_location": "Bengaluru",
+      "events": [
+        {
+          "timestamp": "2026-05-23T10:00:00.000+05:30",
+          "location": "Bengaluru",
+          "status_code": "delivered",
+          "description": "Shipment Delivered"
+        }
+      ],
+      "fetched_at": "2026-05-23T10:05:00.000+05:30",
+      "liveSupported": true,
+      "source": "fixture"
+    },
+    "expected_status": "delivered",
+    "expected_phase": "delivered"
+  },
+  {
+    "name": "deadline_breach_is_delayed",
+    "raw": {
+      "awb": "1234567891",
+      "carrier": "bluedart",
+      "raw_status": "Forwarded to Destination",
+      "current_location": "Delhi Hub",
+      "events": [
+        {
+          "timestamp": "2026-05-24T08:00:00.000+05:30",
+          "location": "Delhi Hub",
+          "status_code": "in_transit",
+          "description": "Forwarded to Destination"
+        }
+      ],
+      "fetched_at": "2026-05-24T08:05:00.000+05:30",
+      "liveSupported": true,
+      "source": "fixture"
+    },
+    "needed_by": "2026-05-24T12:00:00+05:30",
+    "origin_pin": "842001",
+    "destination_pin": "560001",
+    "expected_status": "delayed",
+    "expected_phase": "in_transit"
+  },
+  {
+    "name": "tight_buffer_is_at_risk",
+    "raw": {
+      "awb": "1234567892",
+      "carrier": "bluedart",
+      "raw_status": "Forwarded to Destination",
+      "current_location": "Delhi Hub",
+      "events": [
+        {
+          "timestamp": "2026-05-24T08:00:00.000+05:30",
+          "location": "Delhi Hub",
+          "status_code": "in_transit",
+          "description": "Forwarded to Destination"
+        }
+      ],
+      "fetched_at": "2026-05-24T08:05:00.000+05:30",
+      "liveSupported": true,
+      "source": "fixture"
+    },
+    "needed_by": "2026-05-28T08:00:00+05:30",
+    "origin_pin": "842001",
+    "destination_pin": "560001",
+    "expected_status": "at_risk",
+    "expected_phase": "in_transit"
+  },
+  {
+    "name": "empty_events_remain_unknown",
+    "raw": {
+      "awb": "1234567893",
+      "carrier": "bluedart",
+      "raw_status": "No visible carrier events",
+      "current_location": "",
+      "events": [],
+      "fetched_at": "2026-05-24T08:05:00.000+05:30",
+      "liveSupported": true,
+      "source": "fixture",
+      "notes": ["Blue Dart returned no matching events for the AWB."]
+    },
+    "expected_status": "unknown",
+    "expected_phase": "unknown"
+  }
+]
