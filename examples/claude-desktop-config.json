@@ -2,7 +2,7 @@
   "mcpServers": {
     "indian-parcel": {
       "command": "node",
-      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
+      "args": ["/path/to/indian-parcel/dist/src/server.js"]
     }
   }
 }

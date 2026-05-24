@@ -95,7 +95,7 @@ Add this to `claude_desktop_config.json`:
   "mcpServers": {
     "indian-parcel": {
       "command": "node",
-      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
+      "args": ["/path/to/indian-parcel/dist/src/server.js"]
     }
   }
 }
@@ -119,7 +119,7 @@ A ready-to-paste local config lives in [examples/claude-desktop-config.json](exa
 ### Codex
 
 ```bash
-codex mcp add indian-parcel -- node /Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js
+codex mcp add indian-parcel -- node /path/to/indian-parcel/dist/src/server.js
 ```
 
 After publishing:
@@ -133,7 +133,7 @@ Manual TOML config:
 ```toml
 [mcp_servers.indian-parcel]
 command = "node"
-args = ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
+args = ["/path/to/indian-parcel/dist/src/server.js"]
 ```
 
 ### OpenCode
@@ -143,7 +143,7 @@ args = ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
   "mcp": {
     "indian-parcel": {
       "type": "local",
-      "command": ["node", "/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"],
+      "command": ["node", "/path/to/indian-parcel/dist/src/server.js"],
       "enabled": true
     }
   }
@@ -159,7 +159,7 @@ Add this to your Antigravity MCP config:
   "mcpServers": {
     "indian-parcel": {
       "command": "node",
-      "args": ["/Users/alok/Documents/SourceCode/parcel-mcp/dist/src/server.js"]
+      "args": ["/path/to/indian-parcel/dist/src/server.js"]
     }
   }
 }
