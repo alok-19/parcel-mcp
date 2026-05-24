@@ -2,8 +2,6 @@
 
 `parcel-mcp` is an India-first Model Context Protocol server for shipment tracking, deadline-aware ETA reasoning, anomaly detection, and escalation guidance. It is built for LLM clients that need judgment, not just raw courier scan events.
 
-![Claude Desktop example](docs/claude-desktop-screenshot.svg)
-
 ## Why this exists
 
 > I was tracking my partner's visa documents from Muzaffarpur to Bangalore against a tight embassy deadline. Blue Dart's app is clunky, AfterShip doesn't understand Indian carriers deeply, and TrackMage gives you JSON but no judgment about whether your shipment will actually arrive in time.
@@ -40,20 +38,73 @@ After publishing, the intended install path is:
 npx parcel-mcp
 ```
 
-Claude Desktop config snippet:
+### Configuration in MCP Clients
+
+Below are the setup snippets to integrate `parcel-mcp` with various popular AI development tools:
+
+#### Claude Desktop
+
+Add this to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "parcel": {
       "command": "npx",
-      "args": ["parcel-mcp"]
+      "args": ["-y", "parcel-mcp"]
     }
   }
 }
 ```
 
 A ready-to-paste version also lives in [examples/claude-desktop-config.json](examples/claude-desktop-config.json).
+
+#### OpenCode
+
+For OpenCode, you can add it to your global configuration file (typically `~/.config/opencode/opencode.jsonc`) or a project-specific `opencode.json` file:
+
+```json
+{
+  "mcp": {
+    "parcel": {
+      "type": "local",
+      "command": ["npx", "-y", "parcel-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+#### Codex
+
+For Codex, you can configure it via the CLI:
+
+```bash
+codex mcp add parcel -- npx -y parcel-mcp
+```
+
+Or manually add it to your configuration file (`~/.codex/config.toml` or project-specific `.codex/config.toml`):
+
+```toml
+[mcp_servers.parcel]
+command = "npx"
+args = ["-y", "parcel-mcp"]
+```
+
+#### Antigravity CLI / Editor
+
+For Antigravity CLI or the Antigravity editor integration, add it to your `mcp_config.json` (typically at `~/.gemini/antigravity/mcp_config.json` or `~/.gemini/antigravity-cli/mcp_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "parcel": {
+      "command": "npx",
+      "args": ["-y", "parcel-mcp"]
+    }
+  }
+}
+```
 
 ## Tool Reference
 
@@ -273,22 +324,6 @@ The local SQLite watchlist defaults to `parcel.sqlite` in the project root. Over
 3. Add contact metadata in [data/carrier_contacts.json](data/carrier_contacts.json).
 4. Add fixture HTML and parser tests under [tests/carriers](tests/carriers).
 5. Document whether live support is full or best-effort.
-
-## Roadmap
-
-### Phase 2
-
-- Expand live coverage for DTDC, Delhivery, and India Post.
-- Add HTTP transport for remote MCP clients.
-- Improve route coverage and anomaly depth.
-- Add outbound notification delivery on top of `refresh_watches` state changes.
-- Grow the verdict evaluation set beyond the initial seed cases.
-
-### Phase 3
-
-- Build analytics and observability views on top of the current `get_observability` snapshot.
-- Add richer parser-drift triage workflows and sampled raw-response capture.
-- Prepare registry-grade packaging and publication flow.
 
 ## Example Scenarios
 

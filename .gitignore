@@ -24,6 +24,7 @@ pnpm-debug.log*
 README 2.md
 architecture_flow.md
 parcel-mcp-prompt.md
+plan.md
 
 # Runtime SQLite databases
 *.db
