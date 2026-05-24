@@ -78,7 +78,7 @@ During development, run it directly with `tsx`:
 npm run dev
 ```
 
-After the package is published, the intended install path is:
+You can run `indian-parcel-mcp` directly without global installation using `npx`:
 
 ```bash
 npx -y indian-parcel-mcp
@@ -86,22 +86,11 @@ npx -y indian-parcel-mcp
 
 ## Add To Your MCP Client
 
+Configure your preferred MCP client to use the published package via `npx` (recommended):
+
 ### Claude Desktop
 
 Add this to `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "indian-parcel": {
-      "command": "node",
-      "args": ["/path/to/indian-parcel/dist/src/server.js"]
-    }
-  }
-}
-```
-
-After publishing, switch the command to `npx`:
 
 ```json
 {
@@ -114,26 +103,10 @@ After publishing, switch the command to `npx`:
 }
 ```
 
-A ready-to-paste local config lives in [examples/claude-desktop-config.json](examples/claude-desktop-config.json).
-
 ### Codex
 
 ```bash
-codex mcp add indian-parcel -- node /path/to/indian-parcel/dist/src/server.js
-```
-
-After publishing:
-
-```bash
 codex mcp add indian-parcel -- npx -y indian-parcel-mcp
-```
-
-Manual TOML config:
-
-```toml
-[mcp_servers.indian-parcel]
-command = "node"
-args = ["/path/to/indian-parcel/dist/src/server.js"]
 ```
 
 ### OpenCode
@@ -143,7 +116,7 @@ args = ["/path/to/indian-parcel/dist/src/server.js"]
   "mcp": {
     "indian-parcel": {
       "type": "local",
-      "command": ["node", "/path/to/indian-parcel/dist/src/server.js"],
+      "command": ["npx", "-y", "indian-parcel-mcp"],
       "enabled": true
     }
   }
@@ -158,12 +131,37 @@ Add this to your Antigravity MCP config:
 {
   "mcpServers": {
     "indian-parcel": {
+      "command": "npx",
+      "args": ["-y", "indian-parcel-mcp"]
+    }
+  }
+}
+```
+
+---
+
+## Local Development (Optional)
+
+If you are developing or contributing to `indian-parcel-mcp` and want to run it from your local cloned source:
+
+1. Build the project:
+   ```bash
+   npm run build
+   ```
+2. Reference the absolute path to your built `server.js` file in your client's config:
+
+```json
+{
+  "mcpServers": {
+    "indian-parcel-dev": {
       "command": "node",
       "args": ["/path/to/indian-parcel/dist/src/server.js"]
     }
   }
 }
 ```
+
+A template local configuration is available in [examples/claude-desktop-config.json](examples/claude-desktop-config.json).
 
 ## Ask It Like This
 
